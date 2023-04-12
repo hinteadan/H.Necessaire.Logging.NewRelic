@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "CLI - debug": {
+      "commandName": "Project",
+      "commandLineArgs": "debug"
+    },
+    "CLI - nugetversion - consolidate-deps": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion consolidate-deps"
+    },
+    "CLI - nugetversion - patch": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Necessaire.Logging.NewRelic=patch"
+    },
+    "CLI - nugetversion - minor": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Necessaire.Logging.NewRelic=minor"
+    },
+    "CLI - nugetversion - major": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Necessaire.Logging.NewRelic=major"
+    }
+  }
+}

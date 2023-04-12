@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="H.Necessaire" Version="2.29.2" />
+		<PackageReference Include="H.Necessaire.Serialization" Version="2.29.2" />
+		<PackageReference Include="StandardSocketsHttpHandler" Version="2.2.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="IconLogo.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
