@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="H.Necessaire.CLI" Version="2.29.2" />
+		<PackageReference Include="H.Necessaire.CLI" Version="2.29.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -14,11 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="NewRelicApiBaseUrl.cfg.txt">
+		<None Update="**/*.cfg.txt">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="NewRelicApiKey.cfg.txt">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 

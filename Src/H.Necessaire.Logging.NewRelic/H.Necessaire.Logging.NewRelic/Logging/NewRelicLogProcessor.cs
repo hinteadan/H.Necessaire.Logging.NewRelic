@@ -158,37 +158,100 @@ namespace H.Necessaire.Logging.NewRelic.Logging
                         {
                             group.Key.Application,
                             ScopeID = group.Key.ScopeID.ToString(),
+                            LoggedBy = "H.Necessaire.Logging.NewRelic",
                         },
                     },
                     Logs
                         = group
-                        .Select(log => new NewRelicLog
-                        {
-                            TimestampInUnixMilliseconds = log.HappenedAt.ToUnixTimestamp(),
-                            Message = log.Message,
-                            Attributes = new
-                            {
-                                log.ID,
-                                LogTimestamp = log.HappenedAt.EnsureUtc().ToString("O"),
-                                Level = log.Level.ToString(),
-                                LevelID = (int)log.Level,
-                                log.OperationContext,
-                                log.Method,
-                                log.StackTrace,
-                                log.Component,
-                                AppVersionNumber = log.AppVersion?.Number?.ToString(),
-                                AppVersionTimestamp = log.AppVersion?.Timestamp.EnsureUtc().ToString("O"),
-                                AppVersionBranch = log.AppVersion?.Branch,
-                                AppVersionCommit = log.AppVersion?.Commit,
-                                log.Exception,
-                                log.Payload,
-                                log.Notes,
-                            },
-                        })
+                        .Select(log => MapLogEntryToNewRelicLog(log))
                         .ToArray(),
                 })
                 .ToArray()
                 ;
+        }
+
+        private static NewRelicLog MapLogEntryToNewRelicLog(LogEntry log)
+        {
+            LogException[] exceptions = log.Exception?.Flatten()?.Select(MapExceptionToNewRelicLogException)?.ToArrayNullIfEmpty();
+            bool hasAddonExceptions = (exceptions?.Length ?? 0) > 1;
+
+            return new NewRelicLog
+            {
+                TimestampInUnixMilliseconds = log.HappenedAt.ToUnixTimestamp(),
+                Message = log.Message,
+                Attributes = new
+                {
+                    log.ID,
+                    LogTimestamp = log.HappenedAt.EnsureUtc().ToString("O"),
+                    Level = MapLogLevel(log.Level),
+                    LevelID = (int)log.Level,
+                    log.OperationContext,
+                    log.Method,
+                    log.StackTrace,
+                    log.Component,
+                    AppVersionNumber = log.AppVersion?.Number?.ToString(),
+                    AppVersionTimestamp = log.AppVersion?.Timestamp.EnsureUtc().ToString("O"),
+                    AppVersionBranch = log.AppVersion?.Branch,
+                    AppVersionCommit = log.AppVersion?.Commit,
+                    Exception = exceptions?.Any() == true ? exceptions.First() : null,
+                    ExceptionAddonsMessages = hasAddonExceptions == false ? null : $"{Environment.NewLine}{(string.Join($"{Environment.NewLine}---------------------{Environment.NewLine}", exceptions.Skip(1).Select(x => x.Message.NullIfEmpty()).ToNoNullsArray(nullIfEmpty: false)))}".NullIfEmpty(),
+                    ExceptionAddons = hasAddonExceptions == false ? null : exceptions.Skip(1).ToArray(),
+                    HasExceptionAddons = hasAddonExceptions ? (true as bool?) : null,
+                    log.Payload,
+                    log.Notes,
+                },
+            };
+        }
+
+        private static string MapLogLevel(LogEntryLevel level)
+        {
+            switch(level)
+            {
+                case LogEntryLevel.Critical: return "Error.Critical";
+                default: return level.ToString();
+            }
+        }
+
+        private static LogException MapExceptionToNewRelicLogException(Exception exception)
+        {
+            if (exception is null)
+                return null;
+
+            List<Note> notes = new List<Note>();
+            if (exception.Data?.Keys != null)
+            {
+                foreach (object key in exception.Data.Keys)
+                {
+                    string id = key?.ToString();
+                    string value = exception.Data[key]?.ToString();
+                    if (id.IsEmpty() && value.IsEmpty())
+                        continue;
+                    notes.Add(new Note(id, value));
+                }
+            }
+
+            return
+                new LogException
+                {
+                    Message = exception.Message,
+                    StackTrace = exception.StackTrace,
+                    Source = exception.Source,
+                    HResult = exception.HResult,
+                    TargetSite = exception.TargetSite?.Name,
+                    HelpLink = exception.HelpLink,
+                    Notes = notes.ToArrayNullIfEmpty(),
+                };
+        }
+
+        private class LogException
+        {
+            public string Message { get; set; }
+            public string StackTrace { get; set; }
+            public string Source { get; set; }
+            public int HResult { get; set; }
+            public string TargetSite { get; set; }
+            public string HelpLink { get; set; }
+            public Note[] Notes { get; set; }
         }
     }
 }
