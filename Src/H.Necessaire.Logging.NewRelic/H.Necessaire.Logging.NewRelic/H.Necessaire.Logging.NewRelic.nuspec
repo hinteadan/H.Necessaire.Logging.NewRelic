@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>H.Necessaire.Logging.NewRelic</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <title>H's Necessaire New Relic Logging Integration</title>
     <projectUrl>https://h.necessaire.dev</projectUrl>
     <repository type="git" url="https://github.com/hinteadan/H.Necessaire.Logging.NewRelic.git" branch="master" />
@@ -17,8 +17,8 @@
     <copyright>Copyright © 2023. Hintea Dan Alexandru. All Rights Reserved.</copyright>
     <tags>hintea dan alexandru .net essentials utils extensions core utilities data execution operation operations debounce throttle unsafe code retry policy useful normalization task collections batch task array rad rapid application development framework</tags>
     <dependencies>
-      <dependency id="H.Necessaire" version="2.31.0" />
-      <dependency id="H.Necessaire.Serialization" version="2.31.0" />
+      <dependency id="H.Necessaire" version="2.31.1" />
+      <dependency id="H.Necessaire.Serialization" version="2.31.1" />
       <dependency id="StandardSocketsHttpHandler" version="2.2.0.5" />
     </dependencies>
   </metadata>
