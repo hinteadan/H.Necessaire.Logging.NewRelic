@@ -5,8 +5,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="H.Necessaire" Version="2.33.0" />
-		<PackageReference Include="H.Necessaire.Serialization" Version="2.33.0" />
+		<PackageReference Include="H.Necessaire" Version="2.34.0" />
+		<PackageReference Include="H.Necessaire.Serialization" Version="2.34.0" />
 		<PackageReference Include="StandardSocketsHttpHandler" Version="2.2.0.6" />
 	</ItemGroup>
 
